@@ -11,7 +11,7 @@ export class BadRequestError extends CustomError{
 
     serializeErrors(){
         return [{
-            message: 'Bad Request'
+            message: this.message
         }]
     }
 }
