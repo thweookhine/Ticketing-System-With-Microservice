@@ -39,7 +39,7 @@ router.post('/api/users/signup',[
         jwt: userJWT
     }
 
-    res.status(200).json(user)
+    res.status(201).json(user)
 })
 
 export {router as signupRouter}
