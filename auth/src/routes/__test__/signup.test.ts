@@ -9,5 +9,4 @@ it('returns a 201 on successful signup', async() => {
                 password: 'password'
             })
             .expect(201)
-
 })
