@@ -1,10 +1,8 @@
 import express, { Response } from 'express'
 import { body, validationResult } from 'express-validator'
 import { Request } from 'express-validator/lib/base';
-import { RequestValidationError } from '../errors/request-validation-error';
-import { ValidateRequest } from '../middleware/validate-request';
+import { ValidateRequest, BadRequestError } from '@demotickets/common';
 import { User } from '../models/user';
-import { BadRequestError } from '../errors/bad-request-err';
 import { Password } from '../services/password';
 import jwt from 'jsonwebtoken'
 const router = express.Router()
@@ -17,7 +15,7 @@ router.post('/api/users/signin',[
     .trim()
     .notEmpty()
     .withMessage("You must supply a password.")
-],ValidateRequest, async (req: Request,res: Response) => {
+],ValidateRequest as any, async (req: Request,res: Response) => {
     const {email, password} = req.body;
 
     const existingUser = await User.findOne({email});
