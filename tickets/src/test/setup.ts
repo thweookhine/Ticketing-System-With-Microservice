@@ -24,7 +24,6 @@ beforeEach(async() => {
             await collection.deleteMany({})
         }
     }
-
 })
 
 afterAll(async () => {

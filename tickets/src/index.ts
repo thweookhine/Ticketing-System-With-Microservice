@@ -1,11 +1,14 @@
 import {app} from './app'
 import mongoose from 'mongoose'
 const start = async () => {
+    if(!process.env.JWT_KEY) {
+        throw new Error('JWT_KEY must be defined.')
+    }
+    if(!process.env.MONGO_URI){
+        throw new Error('Mongo URI must be defined.')
+    }
     try{
-        if(!process.env.JWT_KEY) {
-            throw new Error('JWT_KEY must be defined.')
-        }
-        await mongoose.connect("mongodb://tickets-mongo-srv:27017/tickets");
+        await mongoose.connect(process.env.MONGO_URI);
         console.log('Mongodb connected.')
     }catch(err){
         console.log(err);
