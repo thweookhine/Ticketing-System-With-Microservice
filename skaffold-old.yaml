@@ -27,7 +27,7 @@ build:
       context: tickets
       docker:
         dockerfile: Dockerfile
-      sync:
-        manual:
-          - src: "src/**/*.ts"
-            dest: .
+        sync:
+          manual:
+            - src: "src/**/*.ts"
+              dest: .

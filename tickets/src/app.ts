@@ -1,4 +1,4 @@
-import { errorHandler, NotFoundError } from '@demotickets/common'
+import { currentUser, errorHandler, NotFoundError } from '@demotickets/common'
 import cookieSession from 'cookie-session'
 import express, { json } from 'express'
 import { createTicketRouter } from './routes/new'
@@ -9,7 +9,7 @@ app.use(cookieSession({
     signed: false,
     secure: process.env.NODE_ENV !== 'test'
 }))
-
+app.use(currentUser as any);
 app.use(createTicketRouter);
 app.all('*',async (req,res) => {
     throw new NotFoundError();
