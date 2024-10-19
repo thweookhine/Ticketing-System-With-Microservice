@@ -8,10 +8,17 @@ interface UserAttrs{
     password: string
 }
 
+
+// An interface that describes the properties
+// that a User Model has
+// represents entire collection of data
 interface UserModel extends mongoose.Model<UserDoc> {
     build(attrs: UserAttrs): UserDoc
 }
 
+// An interface that describes the properties
+// that a User Document has
+// represents one single record
 interface UserDoc extends mongoose.Document{
     email: string,
     password: string
@@ -49,10 +56,5 @@ userSchema.statics.build = (attrs: UserAttrs) => {
     return new User(attrs)
 }
 const User = mongoose.model<UserDoc,UserModel>('User',userSchema);
-
-const user = User.build({
-email: 'asb@g.com',
-password: 'abc'
-})
 
 export {User};
