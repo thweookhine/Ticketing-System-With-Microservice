@@ -5,16 +5,13 @@ import { NotFoundError } from "@demotickets/common";
 const router= express.Router()
 
 router.get('/api/tickets/:id', async (req: Request, res: Response) => {
-    const id = req.params.id;
+    const ticket = await Ticket.findById(req.params.id);
 
-    // Find Ticket by id
-    const ticket = await Ticket.findById(id);
+  if (!ticket) {
+    throw new NotFoundError();
+  }
 
-    if(!ticket){
-        throw new NotFoundError();
-    }
-
-    res.status(200).send(ticket)
-})
+  res.send(ticket);
+});
 
 export {router as showTicketDetailRouter}

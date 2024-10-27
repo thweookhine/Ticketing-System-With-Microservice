@@ -20,8 +20,7 @@ it('Responds with details about current user.', async () => {
 it('Responds with null value if not authenticated', async () => {
     const response = await request(app)
                             .get('/api/users/currentuser')
-                            .expect(401);
-
-    expect(response.body.errors[0].message).toEqual('Not Authorized')
+                            .expect(200);
+    expect(response.body.currentUser).toEqual(null);
 
 })

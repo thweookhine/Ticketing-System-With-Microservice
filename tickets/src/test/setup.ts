@@ -9,13 +9,14 @@ declare global {
     var signup: () => Promise<string[]>;
   }
 
-beforeAll(async() => {
-    process.env.JWT_KEY="asdfasdf"
-    mongo = await MongoMemoryServer.create();
+beforeAll(async () => {
+    process.env.JWT_KEY = 'asdfasdf';
+    const mongo = await MongoMemoryServer.create();
     const mongoUri = mongo.getUri();
-    console.log("Mongo URI => "+mongoUri)
-    await mongoose.connect(mongoUri, {})
-});
+
+    await mongoose.connect(mongoUri, {});
+  });
+  
 
 beforeEach(async() => {
     const collections = await mongoose.connection.db?.collections();
