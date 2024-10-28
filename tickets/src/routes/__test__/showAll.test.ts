@@ -18,6 +18,5 @@ it('can fetch a list of tickets',async () => {
     await createTicket('Ticket3', 500);
 
     const response = await request(app).get('/api/tickets').send().expect(200);
-    console.log(response.body)
     expect(response.body.length).toEqual(3)
 })
