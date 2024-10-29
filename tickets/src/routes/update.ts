@@ -8,7 +8,7 @@ const router = express.Router();
 router.put('/api/tickets/:id',requireAuth, 
     [
         body('title').not().notEmpty().withMessage('Title is required'),
-        body('price').isFloat({gt: 0}).withMessage('Price must be greater than 0')
+        body('price').isFloat({gt: 0}).withMessage('Price must be provided and must be greater than 0')
     ],
     ValidateRequest,
     async(req: Request, res: Response) => {
@@ -19,14 +19,15 @@ router.put('/api/tickets/:id',requireAuth,
         throw new NotFoundError();
     }
 
-    if(req.currentUser && ticket.userId != req.currentUser.id){
+    if(ticket.userId != req.currentUser!.id){
         throw new NotAuthorizedError();
     }
-
-    const {title, price} = req.body;
-    await ticket.save();
+    ticket.set({
+        title: req.body.title,
+        price: req.body.price
+    })
+    await ticket.save()
     res.status(200).send(ticket)
-
 
 })
 
