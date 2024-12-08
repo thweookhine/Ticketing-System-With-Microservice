@@ -3,6 +3,7 @@ import { app } from '../../app'
 import request from 'supertest';
 import jwt from 'jsonwebtoken'
 import { Ticket } from '../../models/ticket';
+import { natsWrapper } from '../../nats-wrapper';
 
 it('returns a 404 if the provided ID does not exist', async() => {
     const cookie = await global.signup()
@@ -118,4 +119,28 @@ it('updates the ticket provided valid inputs.', async() => {
     expect(ticketData.body.id).toEqual(createResponse.body.id)
     expect(ticketData.body.title).toEqual('Test Title')
     expect(ticketData.body.price).toEqual(157.35)
+})
+
+it('publishes an event', async () => {
+    const cookie = await global.signup();
+
+    const createResponse = await request(app)
+                                .post('/api/tickets')
+                                .set('Cookie',cookie)
+                                .send({
+                                    title: 'Test',
+                                    price: 200
+                                })
+                                .expect(201)
+    
+    const response = await request(app)
+                                .put(`/api/tickets/${createResponse.body.id}`)
+                                .set('Cookie',cookie)
+                                .send({
+                                    title: 'Test Title',
+                                    price: 157.35
+                                })
+                                .expect(200);
+    
+    expect(natsWrapper.client.publish).toHaveBeenCalled()
 })
