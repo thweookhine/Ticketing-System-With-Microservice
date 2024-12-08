@@ -9,7 +9,7 @@ const start = async () => {
         throw new Error('Mongo URI must be defined.')
     }
     try{
-        await natsWrapper.connect('ticketing','clientid2','http://nats-srv:4222');
+        await natsWrapper.connect('ticketing','clientid4','http://nats-srv:4222');
         natsWrapper.client.on('close', () => {
             console.log('NATS connection closed!')
             process.exit()

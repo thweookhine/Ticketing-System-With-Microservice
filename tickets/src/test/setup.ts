@@ -7,7 +7,9 @@ let mongo: any
 
 declare global {
     var signup: () => Promise<string[]>;
-  }
+}
+
+jest.mock('../nats-wrapper')
 
 beforeAll(async () => {
     process.env.JWT_KEY = 'asdfasdf';
