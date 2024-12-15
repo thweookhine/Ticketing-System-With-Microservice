@@ -21,7 +21,7 @@ spec:
                 fieldRef:
                   fieldPath: metadata.name
             - name: NATS_CLUSTER_ID
-              value: "orders"
+              value: ticketing
             - name: NATS_URL
               value: "http://nats-srv:4222"
             - name: MONGO_URI
