@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+import mongoose, { Document } from "mongoose";
 import { TicketDoc } from "./ticket";
 import { OrderStatus } from "@demotickets/common";
 
