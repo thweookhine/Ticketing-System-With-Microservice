@@ -25,7 +25,7 @@ it('Fetch orders from particular user', async () => {
     const ticket3 = await buildTicket();
 
     // Create Order   
-    await request(app)
+    const {body: orderOne} = await request(app)
        .post('/api/orders')
        .set('Cookie',user1)
        .send({
@@ -34,20 +34,20 @@ it('Fetch orders from particular user', async () => {
        .expect(201) 
 
        // Create Order   
-    await request(app)
+    const {body: orderTwo} = await request(app)
         .post('/api/orders')
         .set('Cookie',user1)
         .send({
-            ticketId: ticket3.id
+            ticketId: ticket2.id
         })
         .expect(201) 
 
     // Create Order   
-    await request(app)
+    const {body: orderThree} = await request(app)
        .post('/api/orders')
        .set('Cookie',user2)
        .send({
-           ticketId: ticket2.id
+           ticketId: ticket3.id
        })
        .expect(201)
 
@@ -58,8 +58,10 @@ it('Fetch orders from particular user', async () => {
                                     .expect(200);
 
     expect(responseByUser1.body.length).toEqual(2);
-    expect(responseByUser1.body[0].ticket.title).toEqual('concert')   
-    expect(responseByUser1.body[1].ticket.title).toEqual('concert')   
+    expect(responseByUser1.body[0].id).toEqual(orderOne.id)
+    expect(responseByUser1.body[1].id).toEqual(orderTwo.id)
+    expect(responseByUser1.body[0].ticket.id).toEqual(ticket1.id)   
+    expect(responseByUser1.body[1].ticket.id).toEqual(ticket2.id)   
 
     // Get 1 Order by User2
     const responseByUser2 = await request(app)
@@ -68,7 +70,8 @@ it('Fetch orders from particular user', async () => {
                                     .expect(200);
 
     expect(responseByUser2.body.length).toEqual(1);
-    expect(responseByUser1.body[0].ticket.title).toEqual('concert') 
+    expect(responseByUser2.body[0].id).toEqual(orderThree.id)
+    expect(responseByUser2.body[0].ticket.id).toEqual(ticket3.id) 
 
     // Get no order by User3
     const responseByUser3 = await request(app)
@@ -77,6 +80,5 @@ it('Fetch orders from particular user', async () => {
                                     .expect(200);
 
     expect(responseByUser3.body.length).toEqual(0);
-
 
 })
