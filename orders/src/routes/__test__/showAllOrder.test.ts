@@ -14,6 +14,14 @@ const buildTicket = async () => {
     return ticket;
 }
 
+it('has a route handler listening to /api/orders for order', async () => {
+    const response = await request(app)
+        .get('/api/orders')
+        .send({});
+
+    expect(response.status).not.toEqual(404)
+})
+
 it('Fetch orders from particular user', async () => {
 
     const user1 = await global.signup();
