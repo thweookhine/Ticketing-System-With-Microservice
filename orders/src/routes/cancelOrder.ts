@@ -1,6 +1,8 @@
 import express,{Request, Response} from 'express'
 import { Order } from '../models/order'
 import { NotAuthorizedError, NotFoundError, OrderStatus, requireAuth } from '@demotickets/common';
+import { OrderCancelledPublisher } from '../events/publishers/order-cancelled-publisher';
+import { natsWrapper } from '../nats-wrapper';
 const router = express.Router()
 
 router.delete('/api/orders/:orderId',requireAuth, async(req: Request, res: Response) => {
@@ -16,6 +18,14 @@ router.delete('/api/orders/:orderId',requireAuth, async(req: Request, res: Respo
 
         order.status = OrderStatus.Cancelled;
         await order.save();
+
+        // Publish OrderCancelledEvent
+        await new OrderCancelledPublisher(natsWrapper.client).publish({
+                id: order.id,
+                ticket: {
+                        id: order.ticket.id
+                }
+        })
 
         res.status(204).send({order})
 })
