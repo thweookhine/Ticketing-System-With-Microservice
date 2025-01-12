@@ -3,6 +3,7 @@ import {app} from '../../app'
 import { cookie } from "express-validator";
 import mongoose from "mongoose";
 import { Ticket } from "../../models/ticket";
+import { natsWrapper } from "../../nats-wrapper";
 
 it('has a route handler listening to /api/orders for order', async() => {   
     const response = await request(app)
@@ -99,4 +100,25 @@ it('create order successfully with valid inputs', async() => {
        .expect(201) 
 })
 
-it.todo('emits an order created event')
+it('emits an order created event',async() => {
+    const cookie = await global.signup();
+    
+    // Create One Ticket
+    const ticket = Ticket.build({
+        title: 'Ticket',
+        price: 200
+       })
+    
+       await ticket.save();
+
+    // Create Order   
+    const response = await request(app)
+       .post('/api/orders')
+       .set('Cookie',cookie)
+       .send({
+           ticketId: ticket.id
+       })
+       .expect(201) 
+
+    expect(natsWrapper.client.publish).toHaveBeenCalled()
+})

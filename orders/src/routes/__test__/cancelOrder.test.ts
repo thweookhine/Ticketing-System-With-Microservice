@@ -4,6 +4,7 @@ import { app } from "../../app"
 import { Ticket } from "../../models/ticket"
 import { OrderStatus } from "@demotickets/common"
 import { Order } from "../../models/order"
+import { natsWrapper } from "../../nats-wrapper"
 
 it('has a route handler listening to /api/orders/:orderId', async () => {
     const orderId = new mongoose.Types.ObjectId()
@@ -86,4 +87,30 @@ it('Successfully mark order as canceled', async () => {
     expect(updatedOrder!.status).toEqual(OrderStatus.Cancelled)
 })
 
-it.todo('emits an order cancelled to event')
+it('emits an order cancelled to event', async() => {
+    const cookie = await global.signup();
+
+    //Create One Ticket
+    const ticket = Ticket.build({
+        title: 'Ticket',
+        price: 200
+    })
+
+    await ticket.save();
+
+    // Create Order   
+    const {body: createdOrder} = await request(app)
+       .post('/api/orders')
+       .set('Cookie',cookie)
+       .send({
+           ticketId: ticket.id
+    })
+
+    await request(app)
+        .delete(`/api/orders/${createdOrder.id}`)
+        .set('Cookie',cookie)
+        .send({})
+        .expect(204)
+
+    expect(natsWrapper.client.publish).toHaveBeenCalled()
+})

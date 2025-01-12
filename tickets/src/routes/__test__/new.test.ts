@@ -102,7 +102,6 @@ it('publishes an event', async() => {
             .set('Cookie', cookie)
             .send(ticket)
             .expect(201);
-    console.log(natsWrapper) 
 
     expect(natsWrapper.client.publish).toHaveBeenCalled();
 })
