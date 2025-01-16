@@ -4,6 +4,7 @@ import { Order, OrderStatus } from "./order";
 // An Interface that describes the properties
 // that are required to create new Ticket
 interface TicketAttrs{
+    id: string,
     title: string,
     price: number
 }
@@ -38,7 +39,11 @@ ticketSchema.set('toJSON', {
 })
 
 ticketSchema.statics.build = (attrs: TicketAttrs) => {
-    return new Ticket(attrs);
+    return new Ticket({
+        _id: attrs.id,
+        title: attrs.title,
+        price: attrs.price
+    });
 }
 
 ticketSchema.methods.isReserved = async function () {
