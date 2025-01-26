@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
 import { Order, OrderStatus } from "./order";
+import { updateIfCurrentPlugin } from "mongoose-update-if-current";
 
 // An Interface that describes the properties
 // that are required to create new Ticket
@@ -12,6 +13,7 @@ interface TicketAttrs{
 interface TicketDoc extends mongoose.Document{
     title: string,
     price: number,
+    version: number,
     isReserved(): Promise<boolean>;
 }
 
@@ -31,6 +33,8 @@ const ticketSchema = new mongoose.Schema({
     }
 })
 
+ticketSchema.set('versionKey','version');
+ticketSchema.plugin(updateIfCurrentPlugin)
 ticketSchema.set('toJSON', {
     transform(doc,ret){
         ret.id = ret._id
