@@ -58,7 +58,6 @@ it('Find and Update a ticket!', async () => {
 
 it('Acks a message!', async () => {
     
-    const ticketId = new mongoose.Types.ObjectId().toHexString()
     // setup listener, data and msg
     const {listener, data, msg} = await setup();
 
@@ -66,4 +65,17 @@ it('Acks a message!', async () => {
 
     expect(msg.ack).toHaveBeenCalled();
     expect(msg.ack).toHaveBeenCalledTimes(1);
+})
+
+it('Does not call ack if event has skipped version',async() =>{
+
+    const {listener, data, msg} = await setup()
+
+    data.version = 999;
+
+    try{
+        await listener.onMessage(data, msg);
+    }catch(err){
+    }
+    expect(msg.ack).not.toHaveBeenCalled()
 })
