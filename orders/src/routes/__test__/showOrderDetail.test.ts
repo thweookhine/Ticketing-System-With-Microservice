@@ -1,4 +1,4 @@
-import mongoose from 'mongoose'
+import mongoose, { mongo } from 'mongoose'
 import request from 'supertest'
 import { app } from '../../app'
 import { Ticket } from '../../models/ticket'
@@ -34,6 +34,7 @@ it('return error when fetching Order by Other User', async () => {
     // Create One Ticket
     const user1 = await global.signup();
     const ticket = Ticket.build({
+        id: new mongoose.Types.ObjectId().toHexString(),
         title: 'Ticket',
         price: 200
        })
@@ -62,6 +63,7 @@ it('Successfully Fetch order by Order ID', async () => {
     
     // Create One Ticket
     const ticket = Ticket.build({
+        id: new mongoose.Types.ObjectId().toHexString(),
         title: 'Ticket',
         price: 200
        })

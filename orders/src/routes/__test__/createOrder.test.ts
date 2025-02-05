@@ -56,6 +56,7 @@ it('returns an error if ticket is not found', async() => {
 it('returns an error if ticket is already reserved.', async() => {
    const cookie = await global.signup();
    const ticket = Ticket.build({
+    id: new mongoose.Types.ObjectId().toHexString(),
     title: 'Ticket',
     price: 200
    })
@@ -84,6 +85,7 @@ it('create order successfully with valid inputs', async() => {
     
     // Create One Ticket
     const ticket = Ticket.build({
+        id: new mongoose.Types.ObjectId().toHexString(),
         title: 'Ticket',
         price: 200
        })
@@ -105,6 +107,7 @@ it('emits an order created event',async() => {
     
     // Create One Ticket
     const ticket = Ticket.build({
+        id: new mongoose.Types.ObjectId().toHexString(),
         title: 'Ticket',
         price: 200
        })

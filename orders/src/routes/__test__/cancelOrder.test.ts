@@ -36,6 +36,7 @@ it('return error when fetching Order by Other User', async () => {
     // Create One Ticket
     const user1 = await global.signup();
     const ticket = Ticket.build({
+        id: new mongoose.Types.ObjectId().toHexString(),
         title: 'Ticket',
         price: 200
        })
@@ -62,6 +63,7 @@ it('Successfully mark order as canceled', async () => {
     // Create One Ticket
     const user1 = await global.signup();
     const ticket = Ticket.build({
+        id: new mongoose.Types.ObjectId().toHexString(),
         title: 'Ticket',
         price: 200
        })
@@ -92,6 +94,7 @@ it('emits an order cancelled to event', async() => {
 
     //Create One Ticket
     const ticket = Ticket.build({
+        id: new mongoose.Types.ObjectId().toHexString(),
         title: 'Ticket',
         price: 200
     })
