@@ -19,11 +19,13 @@ export class OrderCreatedListener extends Listener<OrderCreatedEvent>{
         }
 
         // Mark tiket with order Id
-        ticket.orderId = data.id;
-        // ticket.set({orderId: data.id})
+        // ticket.orderId = data.id;
+        ticket.set({orderId: data.id})
 
         // Save the ticket
         await ticket.save();
+
+        // Publish Ticket Update Event
         await new TicketUpdatedPublisher(this.client).publish({
             id: ticket.id,
             title: ticket.title,

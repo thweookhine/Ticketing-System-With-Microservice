@@ -86,3 +86,18 @@ it('Does not invoke ack if Ticket not found error', async() => {
     expect(msg.ack).not.toHaveBeenCalled()
 
 })
+
+it('It publishes the ticket updated event', async() => {
+    const {listener, data, msg} = await setup();
+
+    await listener.onMessage(data, msg);
+
+    expect(natsWrapper.client.publish).toHaveBeenCalled();
+    expect(natsWrapper.client.publish).toHaveBeenCalledTimes(1);
+    
+    // @ts-ignore
+    const ticketUpdatedData = JSON.parse((natsWrapper.client.publish as jest.Mock).mock.calls[0][1])
+    
+    expect(data.id).toBe(ticketUpdatedData.orderId)
+    expect(data.ticket.id).toEqual(ticketUpdatedData.id)
+})
