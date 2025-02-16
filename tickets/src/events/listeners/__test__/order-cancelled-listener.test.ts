@@ -10,18 +10,20 @@ const setup = async () => {
     // Fabricate OrderCancelledListener
     const listener = new OrderCancelledListener(natsWrapper.client);
 
+    const orderId = new mongoose.Types.ObjectId().toHexString()
     // Ticket Creation
     const ticket = Ticket.build({
         title: "Test Title",
         price: 2000,
         userId: new mongoose.Types.ObjectId().toHexString()
     })
+    ticket.set({orderId: orderId})
 
     await ticket.save()
 
     // Fabricate Data
     const data : OrderCancelledEvent['data'] = {
-        id: new mongoose.Types.ObjectId().toHexString(),
+        id: orderId,
         version: 0,
         ticket: {
             id: ticket.id
@@ -36,16 +38,19 @@ const setup = async () => {
     return {listener, data, msg}
 }
 
-it('Cancels Ticket', async () => {
+it('Updates the ticket, publishes an event and acks the message', async () => {
     
     const {listener, data, msg} = await setup();
 
     await listener.onMessage(data, msg);
 
+    // Find Ticket
     const ticket = await Ticket.findById(data.ticket.id);
 
     expect(ticket).toBeDefined();
-    // expect(ticket!.id).toEqual(data.ticket.id);
-    expect(ticket!.orderId).toEqual(data.id)
-
+    expect(ticket!.orderId).not.toBeDefined()
+    expect(ticket!.id).toEqual(data.ticket.id)
+    
+    expect(msg.ack).toHaveBeenCalled();
+    expect(msg.ack).toHaveBeenCalledTimes(1)
 })

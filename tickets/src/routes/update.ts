@@ -1,4 +1,4 @@
-import { NotAuthorizedError, NotFoundError, requireAuth, ValidateRequest } from '@demotickets/common';
+import { BadRequestError, NotAuthorizedError, NotFoundError, requireAuth, ValidateRequest } from '@demotickets/common';
 import express, {Request, Response} from 'express'
 import {body} from 'express-validator'
 import { Ticket } from '../models/ticket';
@@ -21,9 +21,14 @@ router.put('/api/tickets/:id',requireAuth,
         throw new NotFoundError();
     }
 
+    if(ticket.orderId) {
+        throw new BadRequestError("Cannot update a reserved ticket.")
+    }
+
     if(ticket.userId != req.currentUser!.id){
         throw new NotAuthorizedError();
     }
+
     ticket.set({
         title: req.body.title,
         price: req.body.price
