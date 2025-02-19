@@ -1,14 +1,7 @@
-import mongoose from "mongoose"
 import { natsWrapper } from "./nats-wrapper"
 import { app } from "./app"
 
 const start = async () => {
-    if(!process.env.JWT_KEY) {
-        throw new Error("JWT_KEY must be defined.")
-    }
-    if(!process.env.MONGO_URI) {
-        throw new Error("Mongo URI must be defined.")
-    }
     if(!process.env.NATS_CLIENT_ID) {
         throw new Error("NATS Client ID must be defined.")
     }
@@ -28,8 +21,6 @@ const start = async () => {
         process.on('SIGINT', () => natsWrapper.client.close())
         process.on('SIGTERM', () => natsWrapper.client.close())
 
-        await mongoose.connect(process.env.MONGO_URI);
-        console.log('MongoDB connected')
     }catch(err) {
         console.log(err);
     }
