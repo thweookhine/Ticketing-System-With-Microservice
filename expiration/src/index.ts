@@ -1,5 +1,6 @@
 import { natsWrapper } from "./nats-wrapper"
 import { app } from "./app"
+import { OrderCreatedListener } from "./events/listeners/order-created-listener"
 
 const start = async () => {
     if(!process.env.NATS_CLIENT_ID) {
@@ -18,8 +19,10 @@ const start = async () => {
             console.log("NATS connection closed!")
             process.exit()
         })
-        process.on('SIGINT', () => natsWrapper.client.close())
-        process.on('SIGTERM', () => natsWrapper.client.close())
+        process.on('SIGINT', () => natsWrapper.client.close());
+        process.on('SIGTERM', () => natsWrapper.client.close());
+
+        new OrderCreatedListener(natsWrapper.client).listen();
 
     }catch(err) {
         console.log(err);
