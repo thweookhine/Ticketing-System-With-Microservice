@@ -31,7 +31,6 @@ it('returns an error if an invalid ticketId is provided.', async () => {
 
             })
             .expect(400)
-    
 })
 
 it('can only be accessed if the user is signed in', async() => {
